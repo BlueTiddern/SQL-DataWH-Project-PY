@@ -13,10 +13,9 @@
          - Performs a BULK INSERT from a CSV source file located on disk.
          - Logs timing for each load step.
       3. Includes TRY...CATCH error handling for logging basic error details.
-      4. No Parameters accepted in the stored procedure.
 
  WARNING     : 
-    ⚠️  This process will **PERMANENTLY DELETE** all existing data in the 
+    ??  This process will **PERMANENTLY DELETE** all existing data in the 
        target Bronze layer tables before loading fresh data from source files.
        Ensure:
          - You have backups of any data you need.
@@ -48,10 +47,13 @@ CREATE OR ALTER PROCEDURE bronze.load_tables AS
 
 BEGIN
 	
-	DECLARE @start_time DATETIME, @end_time DATETIME;
+	DECLARE @start_time DATETIME, @end_time DATETIME, @bronze_start_time DATETIME, @bronze_end_time DATETIME;
 
 	BEGIN TRY
-	
+
+		-- Total execution time
+		SET @bronze_start_time = GETDATE();
+		
 		PRINT '===================================================';
 		PRINT 'BRONZE LAYER DATA LOAD';
 		PRINT '===================================================';
@@ -206,6 +208,15 @@ BEGIN
 		PRINT '>>> Data loaded in cust_info table in:' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + 'seconds';
 		PRINT '---------------------------------------------------';
 
+		SET @bronze_end_time = GETDATE();
+
+		
+
+		PRINT '===================================================';
+		PRINT 'BRONZE LAYER DATA LOAD ENDS';
+		PRINT '     - Total load duration: ' + CAST(DATEDIFF(second, @bronze_start_time, @bronze_end_time) AS NVARCHAR) + 'seconds';
+		PRINT '===================================================';
+
 	END TRY
 	BEGIN CATCH
 		PRINT '===================================================';
@@ -218,5 +229,3 @@ BEGIN
 
 
 END
-
-
