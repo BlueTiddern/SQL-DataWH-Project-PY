@@ -313,7 +313,7 @@ BEGIN
 		--------------------------------------------------------------
 
 		PRINT '>>> Truncating Table: silver.erp_px_cat_g1v2';
-		TRUNCATE TABLE silver.erp_loc_a101;
+		TRUNCATE TABLE silver.erp_px_cat_g1v2;
 
 		-- start load into the erp_px_cat_g1v2
 		SET @start_time = GETDATE();
